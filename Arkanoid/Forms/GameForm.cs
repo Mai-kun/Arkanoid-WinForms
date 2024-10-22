@@ -7,25 +7,27 @@ namespace Arkanoid
         private readonly GameDrawer gameDrawer;
         private readonly GameManager gameManager;
 
+        private const int DefaultHeartCount = 3;
+        private int currentHeartCount = DefaultHeartCount;
+
         public Timer Timer1 { get; init; }
-        public Panel GamePanel => gamePanel;
-        public Panel HeartsPanel => heartsPanel;
+
         public Label ScoreLabel => scoreLabel;
 
         public GameForm()
         {
             InitializeComponent();
 
-            gameDrawer = new(this);
-            gameManager = GameManager.GetInstance(this);
+            gameDrawer = new(gamePanel, heartsPanel);
+            gameManager = new(this);
 
-            gamePanel.Width = gameManager.Brick.Width * GameDrawer.BlocksInRow;
+            gamePanel.Width = gameDrawer.Brick.Width * gameDrawer.BricksInRow;
             Width = gamePanel.Width + 250;
 
-            gameDrawer.InitializeBricks();
-            gameDrawer.InitializeBall();
-            gameDrawer.InitializePlatform();
-            gameDrawer.InitializeHearts();
+            gameDrawer.InitializePictureBoxBricks();
+            gameDrawer.InitializePictureBoxBall();
+            gameDrawer.InitializePictureBoxPlatform();
+            gameDrawer.InitializePictureBoxHearts(DefaultHeartCount);
 
             Timer1 = new Timer
             {
@@ -37,28 +39,41 @@ namespace Arkanoid
 
         private void Timer1_Tick(object? sender, EventArgs e)
         {
-            gameManager.Ball.Move();
-            gameDrawer.BallPictureBox.Location = gameManager.Ball.Location;
+            var speedX = gameDrawer.Ball.SpeedX;
+            var speedY = gameDrawer.Ball.SpeedY;
+
+            var newLocationX = gameDrawer.BallPictureBox.Location.X + speedX;
+            var newLocationY = gameDrawer.BallPictureBox.Location.Y + speedY;
+
+            gameDrawer.BallPictureBox.Location = new Point(newLocationX, newLocationY);
 
             if (gameDrawer.BallPictureBox.Bottom > gamePanel.Bottom)
             {
                 gameDrawer.RemoveOneHeart();
+                currentHeartCount -= 1;
+
+                if (currentHeartCount == 0 && gameManager.NeedResetGame())
+                {
+                    gameDrawer.RedrawElements();
+                    return;
+                }
+
                 return;
             }
 
             if (gameDrawer.BallPictureBox.Left < 0 || gameDrawer.BallPictureBox.Right > gamePanel.Width)
             {
-                gameManager.Ball.ChangeVelocityX();
+                gameDrawer.Ball.ChangeVelocityX();
             }
 
             if (gameDrawer.BallPictureBox.Top < 0)
             {
-                gameManager.Ball.ChangeVelocityY();
+                gameDrawer.Ball.ChangeVelocityY();
             }
 
             if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
             {
-                gameManager.Ball.ChangeVelocityY();
+                gameDrawer.Ball.ChangeVelocityY();
             }
 
             foreach (var brick in gameDrawer.Bricks)
@@ -70,46 +85,50 @@ namespace Arkanoid
 
                     gameManager.UpdateScore();
 
-                    gameManager.Ball.ChangeVelocityY();
+                    gameDrawer.Ball.ChangeVelocityY();
                     break;
                 }
             }
         }
 
+        private int platformSpeed = 8;
+
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
-            var platform = gameManager.Platform;
+            var platformLocationX = gameDrawer.PlatformPictureBox.Location.X;
 
             switch (e.KeyCode)
             {
                 case Keys.A:
-                    platform.Move(Direction.Left);
+                    platformLocationX -= platformSpeed;
                     break;
 
                 case Keys.D:
-                    platform.Move(Direction.Right);
+                    platformLocationX += platformSpeed;
                     break;
 
                 case Keys.Escape:
                     Close();
                     break;
             }
+            if (IsPlatformTouchEdge(platformLocationX, gameDrawer.PlatformPictureBox.Width))
+            {
+                return;
+            }
 
-            platform.Location = ClampPlatformPosition(platform.Location, platform.Width);
-            gameDrawer.PlatformPictureBox.Location = platform.Location;
+            var LocationY = gameDrawer.PlatformPictureBox.Location.Y;
+
+            gameDrawer.PlatformPictureBox.Location = new Point(platformLocationX, LocationY);
         }
 
-        private Point ClampPlatformPosition(Point location, int controlWidth)
+        private bool IsPlatformTouchEdge(int platformLocationX, int controlWidth)
         {
-            if (location.X < 0)
+            if (platformLocationX < 0 || platformLocationX > gamePanel.Width - controlWidth)
             {
-                return new Point(0, location.Y);
+                return true;
             }
-            else if (location.X > gamePanel.Width - controlWidth)
-            {
-                return new Point(gamePanel.Width - controlWidth, location.Y);
-            }
-            return location;
+
+            return false;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using Arkanoid.Models;
-using Arkanoid.Properties;
-
-namespace Arkanoid
+﻿namespace Arkanoid
 {
     /// <summary>
     /// Представляет функционал Управления игровым процессом.
@@ -12,36 +9,9 @@ namespace Arkanoid
         private readonly GameForm form;
         private static GameManager? instance;
 
-        private GameManager(GameForm form)
+        public GameManager(GameForm form)
         {
             this.form = form;
-
-            InitializeInstances();
-        }
-
-        /// <summary>
-        /// <see cref="Models.Ball"/> игры.
-        /// </summary>
-        public Ball Ball { get; set; }
-
-        /// <summary>
-        /// <see cref="Models.Platform"/> игрока.
-        /// </summary>
-        public Platform Platform { get; set; }
-
-        /// <summary>
-        /// <see cref="Models.Brick"/> игрока.
-        /// </summary>
-        public Brick Brick { get; set; }
-
-        /// <summary>
-        /// Возвращает единственный экземпляр <see cref="GameManager"/>.
-        /// </summary>
-        public static GameManager GetInstance(GameForm form)
-        {
-            instance ??= new GameManager(form);
-
-            return instance;
         }
 
         /// <summary>
@@ -72,7 +42,6 @@ namespace Arkanoid
 
             score = 0;
             UpdateScoreLabel();
-            InitializeInstances();
             form.Timer1.Start();
             return true;
         }
@@ -80,18 +49,6 @@ namespace Arkanoid
         private void UpdateScoreLabel()
         {
             form.ScoreLabel.Text = $"Счёт: {score}";
-        }
-
-        private void InitializeInstances()
-        {
-            var platformPoint = new Point(form.GamePanel.Width / 2, form.GamePanel.Height - 100);
-            Platform = new(150, 35, Resources.Platform, platformPoint, 8);
-
-            var ballPoint = new Point(form.GamePanel.Width / 2, form.GamePanel.Height / 2);
-            Ball = new(Resources.Ball, 25, -2, -2, ballPoint);
-
-            Bitmap[] bricksBitmap = { Resources.BlueBrick, Resources.PurpleBrick, Resources.GreenBrick, Resources.RedBrick, Resources.OrangeBrick };
-            Brick = new(80, 30, bricksBitmap);
         }
     }
 }

@@ -6,11 +6,6 @@ namespace Arkanoid.Models
     public class Ball : IMovable
     {
         /// <summary>
-        /// Изображение, представляющее внешний вид
-        /// </summary>
-        public Bitmap Image { get; private set; }
-
-        /// <summary>
         /// Размер
         /// </summary>
         public int Size { get; private set; }
@@ -28,9 +23,8 @@ namespace Arkanoid.Models
         /// <inheritdoc cref="IMovable.Location"/>
         public Point Location { get; set; }
 
-        public Ball(Bitmap ball, int size, int speedX, int speedY, Point location)
+        public Ball(int size, int speedX, int speedY, Point location)
         {
-            Image = ball;
             Size = size;
             SpeedX = speedX;
             SpeedY = speedY;
@@ -51,12 +45,6 @@ namespace Arkanoid.Models
         public void ChangeVelocityY()
         {
             SpeedY = -SpeedY;
-        }
-
-        /// <inheritdoc cref="IMovable.Move"/>
-        public void Move()
-        {
-            Location = new Point(Location.X + SpeedX, Location.Y + SpeedY);
         }
     }
 }

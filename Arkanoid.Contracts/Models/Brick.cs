@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Arkanoid.Models
+﻿namespace Arkanoid.Models
 {
     public class Brick
     {
@@ -14,16 +12,10 @@ namespace Arkanoid.Models
         /// </summary>
         public int Height { get; set; }
 
-        /// <summary>
-        /// Возможные изображения блока.
-        /// </summary>
-        public Bitmap[] Image { get; set; }
-
-        public Brick(int width, int height, Bitmap[] image)
+        public Brick(int width, int height)
         {
             Width = width;
             Height = height;
-            Image = image;
         }
     }
 }

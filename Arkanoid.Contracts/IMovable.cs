@@ -11,10 +11,5 @@ namespace Arkanoid.Contracts
         /// Указывает текущее положение объекта в виде координат на плоскости
         /// </summary>
         public Point Location { get; set; }
-
-        /// <summary>
-        /// Изменяет положение объекта
-        /// </summary>
-        public void Move();
     }
 }
