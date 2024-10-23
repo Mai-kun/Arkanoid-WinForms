@@ -71,8 +71,9 @@ namespace Arkanoid
             gameDrawer.BallPictureBox.Location = new Point(newLocationX, newLocationY);
 
             CheckGameEnd();
-            CheckBallCollisionWithBricks();
             CheckBallCollisionWithBorders();
+            CheckBallCollisionWithPlatform();
+            CheckBallCollisionWithBricks();
         }
 
         private void CheckGameEnd()
@@ -103,9 +104,21 @@ namespace Arkanoid
             {
                 ball.ChangeVelocityY();
             }
+        }
 
+        private void CheckBallCollisionWithPlatform()
+        {
             if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
             {
+                var platformLeft = gameDrawer.PlatformPictureBox.Left;
+                var platformRight = gameDrawer.PlatformPictureBox.Right;
+
+                if (gameDrawer.BallPictureBox.Right >= platformRight ||
+                    gameDrawer.BallPictureBox.Left <= platformLeft)
+                {
+                    ball.ChangeVelocityX();
+                }
+
                 ball.ChangeVelocityY();
             }
         }
