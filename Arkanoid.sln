@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arkanoid", "Arkanoid\Arkanoid.csproj", "{80177B16-375E-4622-BD2F-A02591B4C588}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arkanoid.Contracts", "Arkanoid.Contracts\Arkanoid.Contracts.csproj", "{0FF51B87-0294-4143-BD7F-E4A230FA20BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arkanoid.GameMaster", "Arkanoid.GameMaster\Arkanoid.GameMaster.csproj", "{E50A5186-F295-4FEB-8907-04AF41D3978C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80177B16-375E-4622-BD2F-A02591B4C588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80177B16-375E-4622-BD2F-A02591B4C588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80177B16-375E-4622-BD2F-A02591B4C588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80177B16-375E-4622-BD2F-A02591B4C588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FF51B87-0294-4143-BD7F-E4A230FA20BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FF51B87-0294-4143-BD7F-E4A230FA20BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FF51B87-0294-4143-BD7F-E4A230FA20BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FF51B87-0294-4143-BD7F-E4A230FA20BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E50A5186-F295-4FEB-8907-04AF41D3978C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E50A5186-F295-4FEB-8907-04AF41D3978C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E50A5186-F295-4FEB-8907-04AF41D3978C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E50A5186-F295-4FEB-8907-04AF41D3978C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48B1C669-4048-44D7-8A88-AB185176A797}
+	EndGlobalSection
+EndGlobal
