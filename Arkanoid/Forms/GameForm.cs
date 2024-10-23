@@ -42,14 +42,21 @@ namespace Arkanoid
 
         private void Timer1_Tick(object? sender, EventArgs e)
         {
-            var speedX = gameDrawer.Ball.SpeedX;
-            var speedY = gameDrawer.Ball.SpeedY;
+            var ballSpeedX = gameDrawer.Ball.SpeedX;
+            var ballSpeedY = gameDrawer.Ball.SpeedY;
 
-            var newLocationX = gameDrawer.BallPictureBox.Location.X + speedX;
-            var newLocationY = gameDrawer.BallPictureBox.Location.Y + speedY;
+            var newLocationX = gameDrawer.BallPictureBox.Location.X + ballSpeedX;
+            var newLocationY = gameDrawer.BallPictureBox.Location.Y + ballSpeedY;
 
             gameDrawer.BallPictureBox.Location = new Point(newLocationX, newLocationY);
 
+            CheckGameEnd();
+            CheckBallCollisionWithBricks();
+            CheckBallCollisionWithBorders();
+        }
+
+        private void CheckGameEnd()
+        {
             if (gameDrawer.BallPictureBox.Bottom > gamePanel.Bottom)
             {
                 gameDrawer.RemoveOneHeart();
@@ -63,25 +70,9 @@ namespace Arkanoid
 
                 return;
             }
-
-            CheckBallCollision();
-
-            foreach (var brick in gameDrawer.Bricks)
-            {
-                if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(brick.Bounds))
-                {
-                    gamePanel.Controls.Remove(brick);
-                    gameDrawer.Bricks.Remove(brick);
-
-                    gameManager.UpdateScore();
-
-                    gameDrawer.Ball.ChangeVelocityY();
-                    break;
-                }
-            }
         }
 
-        private void CheckBallCollision()
+        private void CheckBallCollisionWithBorders()
         {
             if (gameDrawer.BallPictureBox.Left < 0 || gameDrawer.BallPictureBox.Right > gamePanel.Width)
             {
@@ -96,6 +87,23 @@ namespace Arkanoid
             if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
             {
                 gameDrawer.Ball.ChangeVelocityY();
+            }
+        }
+
+        private void CheckBallCollisionWithBricks()
+        {
+            foreach (var brick in gameDrawer.Bricks)
+            {
+                if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(brick.Bounds))
+                {
+                    gamePanel.Controls.Remove(brick);
+                    gameDrawer.Bricks.Remove(brick);
+
+                    gameManager.UpdateScore();
+
+                    gameDrawer.Ball.ChangeVelocityY();
+                    break;
+                }
             }
         }
 
@@ -117,13 +125,13 @@ namespace Arkanoid
                     Close();
                     break;
             }
+
             if (IsPlatformTouchEdge(platformLocationX, gameDrawer.PlatformPictureBox.Width))
             {
                 return;
             }
 
             var LocationY = gameDrawer.PlatformPictureBox.Location.Y;
-
             gameDrawer.PlatformPictureBox.Location = new Point(platformLocationX, LocationY);
         }
 
