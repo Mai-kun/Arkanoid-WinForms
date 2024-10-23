@@ -1,17 +1,21 @@
-﻿namespace Arkanoid
+﻿using Timer = System.Windows.Forms.Timer;
+
+namespace Arkanoid
 {
     /// <summary>
-    /// Представляет функционал Управления игровым процессом.
+    /// Представляет функционал управления игровым процессом.
     /// </summary>
     public class GameManager
     {
         private int score = 0;
-        private readonly GameForm form;
-        private static GameManager? instance;
+        private readonly Form form;
+        private readonly Timer gameTimer;
+        private readonly Label uiLabel;
 
-        public GameManager(GameForm form)
+        public GameManager(Timer gameTimer, Label uiLabel)
         {
-            this.form = form;
+            this.gameTimer = gameTimer;
+            this.uiLabel = uiLabel;
         }
 
         /// <summary>
@@ -28,7 +32,7 @@
         /// </summary>
         public bool NeedResetGame()
         {
-            form.Timer1.Stop();
+            gameTimer.Stop();
 
             var dialogResult = MessageBox.Show("Вы проиграли. Хотите сыграть снова?",
                                                 "Уведомление",
@@ -42,13 +46,13 @@
 
             score = 0;
             UpdateScoreLabel();
-            form.Timer1.Start();
+            gameTimer.Start();
             return true;
         }
 
         private void UpdateScoreLabel()
         {
-            form.ScoreLabel.Text = $"Счёт: {score}";
+            uiLabel.Text = $"Счёт: {score}";
         }
     }
 }

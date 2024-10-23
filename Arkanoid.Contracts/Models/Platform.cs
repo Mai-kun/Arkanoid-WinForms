@@ -15,15 +15,27 @@ namespace Arkanoid.Models
         public int Height { get; init; }
 
         /// <summary>
+        /// Скорость
+        /// </summary>
+        public int Speed { get; init; }
+
+        /// <summary>
         /// Положение в пространстве
         /// </summary>
         public Point Location { get; set; }
 
-        public Platform(int width, int height, Point location)
+        /// <summary>
+        /// Изображение
+        /// </summary>
+        public Bitmap Image { get; private set; }
+
+        public Platform(int width, int height, int speed, Point location, Bitmap image)
         {
             Width = width;
             Height = height;
+            Speed = speed;
             Location = location;
+            Image = image;
         }
     }
 }

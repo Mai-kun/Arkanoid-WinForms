@@ -23,15 +23,20 @@ namespace Arkanoid
         /// </summary>
         public Ball Ball { get; set; }
 
+        /// <summary>
+        /// Экземпляр объекта <see cref="Models.Ball"/>.
+        /// </summary>
+        public Platform Platform { get; set; }
+
         private const int Rows = 5;
         private int defaultHeartCount;
         private readonly Control heartsControl;
         private readonly Control mainControl;
-        private readonly Bitmap[] bricksBitmap = { Resources.BlueBrick, Resources.PurpleBrick, Resources.GreenBrick, Resources.RedBrick, Resources.OrangeBrick };
 
         public GameDrawer(Control mainControl, Control heartsControl)
         {
-            Brick = new(80, 30);
+            Bitmap[] bricksBitmap = { Resources.BlueBrick, Resources.PurpleBrick, Resources.GreenBrick, Resources.RedBrick, Resources.OrangeBrick };
+            Brick = new(80, 30, bricksBitmap);
             BricksInRow = 8;
 
             this.mainControl = mainControl;
@@ -69,7 +74,7 @@ namespace Arkanoid
                     {
                         Width = Brick.Width,
                         Height = Brick.Height,
-                        Image = bricksBitmap[row % bricksBitmap.Length],
+                        Image = Brick.Images[row % Brick.Images.Length],
                         SizeMode = PictureBoxSizeMode.StretchImage,
                         Left = col * Brick.Width,
                         Top = row * Brick.Height,
@@ -103,7 +108,7 @@ namespace Arkanoid
         private void InitBallInstance()
         {
             var ballPoint = new Point(mainControl.Width / 2, mainControl.Height / 2);
-            Ball = new(25, -2, -2, ballPoint);
+            Ball = new(25, -2, -2, ballPoint, Resources.Ball);
         }
 
         /// <summary>
@@ -112,15 +117,15 @@ namespace Arkanoid
         public void InitializePictureBoxPlatform()
         {
             var platformPoint = new Point(mainControl.Width / 2, mainControl.Height - 100);
-            Platform platform = new(150, 35, platformPoint);
+            Platform = new(150, 35, 8, platformPoint, Resources.Platform);
 
             PlatformPictureBox = new PictureBox()
             {
-                Width = platform.Width,
-                Height = platform.Height,
-                Image = Resources.Platform,
+                Width = Platform.Width,
+                Height = Platform.Height,
+                Image = Platform.Image,
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Location = platform.Location,
+                Location = Platform.Location,
             };
 
             mainControl.Controls.Add(PlatformPictureBox);

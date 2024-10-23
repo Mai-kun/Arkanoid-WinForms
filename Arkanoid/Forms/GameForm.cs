@@ -9,17 +9,13 @@ namespace Arkanoid
 
         private const int DefaultHeartCount = 3;
         private int currentHeartCount = DefaultHeartCount;
-
-        public Timer Timer1 { get; init; }
-
-        public Label ScoreLabel => scoreLabel;
+        private Timer timer1;
 
         public GameForm()
         {
             InitializeComponent();
 
             gameDrawer = new(gamePanel, heartsPanel);
-            gameManager = new(this);
 
             gamePanel.Width = gameDrawer.Brick.Width * gameDrawer.BricksInRow;
             Width = gamePanel.Width + 250;
@@ -29,12 +25,19 @@ namespace Arkanoid
             gameDrawer.InitializePictureBoxPlatform();
             gameDrawer.InitializePictureBoxHearts(DefaultHeartCount);
 
-            Timer1 = new Timer
+            InitializeTimer();
+
+            gameManager = new(timer1, scoreLabel);
+        }
+
+        private void InitializeTimer()
+        {
+            timer1 = new Timer
             {
                 Interval = 10
             };
-            Timer1.Tick += Timer1_Tick;
-            Timer1.Start();
+            timer1.Tick += Timer1_Tick;
+            timer1.Start();
         }
 
         private void Timer1_Tick(object? sender, EventArgs e)
@@ -61,20 +64,7 @@ namespace Arkanoid
                 return;
             }
 
-            if (gameDrawer.BallPictureBox.Left < 0 || gameDrawer.BallPictureBox.Right > gamePanel.Width)
-            {
-                gameDrawer.Ball.ChangeVelocityX();
-            }
-
-            if (gameDrawer.BallPictureBox.Top < 0)
-            {
-                gameDrawer.Ball.ChangeVelocityY();
-            }
-
-            if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
-            {
-                gameDrawer.Ball.ChangeVelocityY();
-            }
+            CheckBallCollision();
 
             foreach (var brick in gameDrawer.Bricks)
             {
@@ -91,7 +81,23 @@ namespace Arkanoid
             }
         }
 
-        private int platformSpeed = 8;
+        private void CheckBallCollision()
+        {
+            if (gameDrawer.BallPictureBox.Left < 0 || gameDrawer.BallPictureBox.Right > gamePanel.Width)
+            {
+                gameDrawer.Ball.ChangeVelocityX();
+            }
+
+            if (gameDrawer.BallPictureBox.Top < 0)
+            {
+                gameDrawer.Ball.ChangeVelocityY();
+            }
+
+            if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
+            {
+                gameDrawer.Ball.ChangeVelocityY();
+            }
+        }
 
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -100,11 +106,11 @@ namespace Arkanoid
             switch (e.KeyCode)
             {
                 case Keys.A:
-                    platformLocationX -= platformSpeed;
+                    platformLocationX -= gameDrawer.Platform.Speed;
                     break;
 
                 case Keys.D:
-                    platformLocationX += platformSpeed;
+                    platformLocationX += gameDrawer.Platform.Speed;
                     break;
 
                 case Keys.Escape:
