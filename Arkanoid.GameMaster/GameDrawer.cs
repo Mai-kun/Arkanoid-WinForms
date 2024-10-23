@@ -1,5 +1,4 @@
 ﻿using Arkanoid.Contracts.Models;
-using Arkanoid.Models;
 
 namespace Arkanoid.GameMaster
 {
@@ -13,7 +12,7 @@ namespace Arkanoid.GameMaster
         /// </summary>
         public int BricksInRow { get; } = 8;
 
-        private readonly brick brick;
+        private readonly Brick brick;
         private readonly Platform platform;
         private readonly Ball ball;
         private readonly Heart heart;
@@ -23,7 +22,7 @@ namespace Arkanoid.GameMaster
         private const int Rows = 5;
         private int defaultHeartCount;
 
-        public GameDrawer(Control mainControl, Control heartsControl, brick brick, Platform platform, Ball ball, Heart heart)
+        public GameDrawer(Control mainControl, Control heartsControl, Brick brick, Platform platform, Ball ball, Heart heart)
         {
             this.brick = brick;
             this.platform = platform;
@@ -45,7 +44,7 @@ namespace Arkanoid.GameMaster
         public PictureBox PlatformPictureBox { get; set; }
 
         /// <summary>
-        /// Список объектов <see cref="PictureBox"/> по <see cref="Models.brick"/>.
+        /// Список объектов <see cref="PictureBox"/> для <see cref="Brick"/>.
         /// </summary>
         public List<PictureBox> Bricks { get; set; }
 

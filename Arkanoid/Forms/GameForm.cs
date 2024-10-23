@@ -1,6 +1,5 @@
 using Arkanoid.Contracts.Models;
 using Arkanoid.GameMaster;
-using Arkanoid.Models;
 using Arkanoid.Properties;
 using Timer = System.Windows.Forms.Timer;
 
@@ -11,10 +10,9 @@ namespace Arkanoid
         private readonly GameDrawer gameDrawer;
         private readonly GameManager gameManager;
 
-        private const int DefaultHeartCount = 3;
-        private int currentHeartCount = DefaultHeartCount;
+        private int heartCount = 3;
         private Timer timer1;
-        private brick brick;
+        private Brick brick;
         private Platform platform;
         private Ball ball;
         private Heart heart;
@@ -32,7 +30,7 @@ namespace Arkanoid
             gameDrawer.InitializePictureBoxBricks();
             gameDrawer.InitializePictureBoxBall();
             gameDrawer.InitializePictureBoxPlatform();
-            gameDrawer.InitializePictureBoxHearts(DefaultHeartCount);
+            gameDrawer.InitializePictureBoxHearts(heartCount);
 
             InitializeTimer();
             gameManager = new(timer1, scoreLabel);
@@ -46,10 +44,10 @@ namespace Arkanoid
             var platformPoint = new Point(Width / 2, Height - 100);
             platform = new(150, 35, 8, platformPoint, Resources.Platform);
 
-            heart = new(Resources.Heart, heartsPanel.Width / DefaultHeartCount, 0);
+            heart = new(Resources.Heart, heartsPanel.Width / heartCount, 0);
 
             var ballPoint = new Point(Width / 2, Height / 2);
-            ball = new(25, 2, 2, ballPoint, Resources.Ball);
+            ball = new(25, -2, -2, ballPoint, Resources.Ball);
         }
 
         private void InitializeTimer()
@@ -82,9 +80,9 @@ namespace Arkanoid
             if (gameDrawer.BallPictureBox.Bottom > gamePanel.Bottom)
             {
                 gameDrawer.RemoveOneHeart();
-                currentHeartCount -= 1;
+                heartCount -= 1;
 
-                if (currentHeartCount == 0 && gameManager.NeedResetGame())
+                if (heartCount == 0 && gameManager.NeedResetGame())
                 {
                     gameDrawer.RedrawElements();
                     return;

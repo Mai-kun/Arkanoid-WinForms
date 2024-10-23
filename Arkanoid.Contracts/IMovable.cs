@@ -8,7 +8,7 @@ namespace Arkanoid.Contracts
     internal interface IMovable
     {
         /// <summary>
-        /// Указывает текущее положение объекта в виде координат на плоскости
+        /// Указывает текущее положение
         /// </summary>
         public Point Location { get; set; }
     }

@@ -1,19 +1,18 @@
 ﻿using System.Drawing;
-using Arkanoid.Contracts;
 
-namespace Arkanoid.Models
+namespace Arkanoid.Contracts.Models
 {
     public class Ball : IMovable
     {
         /// <summary>
         /// Изображение
         /// </summary>
-        public Bitmap Image { get; private set; }
+        public Bitmap Image { get; set; }
 
         /// <summary>
         /// Размер
         /// </summary>
-        public int Size { get; private set; }
+        public int Size { get; set; }
 
         /// <summary>
         /// Текущая скорость по оси X

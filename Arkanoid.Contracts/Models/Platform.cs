@@ -1,23 +1,23 @@
 ﻿using System.Drawing;
 
-namespace Arkanoid.Models
+namespace Arkanoid.Contracts.Models
 {
     public class Platform
     {
         /// <summary>
         /// Ширина
         /// </summary>
-        public int Width { get; init; }
+        public int Width { get; set; }
 
         /// <summary>
         /// Высота
         /// </summary>
-        public int Height { get; init; }
+        public int Height { get; set; }
 
         /// <summary>
         /// Скорость
         /// </summary>
-        public int Speed { get; init; }
+        public int Speed { get; set; }
 
         /// <summary>
         /// Положение в пространстве
@@ -27,7 +27,7 @@ namespace Arkanoid.Models
         /// <summary>
         /// Изображение
         /// </summary>
-        public Bitmap Image { get; private set; }
+        public Bitmap Image { get; set; }
 
         public Platform(int width, int height, int speed, Point location, Bitmap image)
         {

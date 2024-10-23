@@ -8,7 +8,6 @@ namespace Arkanoid
     public class GameManager
     {
         private int score = 0;
-        private readonly Form form;
         private readonly Timer gameTimer;
         private readonly Label uiLabel;
 
@@ -28,7 +27,7 @@ namespace Arkanoid
         }
 
         /// <summary>
-        /// Спрашивает о необходимости возобновления игры.
+        /// Спрашивает о необходимости перезапуска игры.
         /// </summary>
         public bool NeedResetGame()
         {
