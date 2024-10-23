@@ -1,29 +1,29 @@
 ﻿using System.Drawing;
 
-namespace Arkanoid.Models
+namespace Arkanoid.Contracts.Models
 {
-    public class brick
+    public class Heart
     {
         /// <summary>
         /// Изображение
         /// </summary>
-        public Bitmap[] Images { get; private set; }
+        public Bitmap Image { get; set; }
 
         /// <summary>
-        /// Ширина.
+        /// Ширина
         /// </summary>
         public int Width { get; set; }
 
         /// <summary>
-        /// Высота.
+        /// Высота
         /// </summary>
         public int Height { get; set; }
 
-        public brick(int width, int height, Bitmap[] image)
+        public Heart(Bitmap image, int width, int height)
         {
+            Image = image;
             Width = width;
             Height = height;
-            Images = image;
         }
     }
 }

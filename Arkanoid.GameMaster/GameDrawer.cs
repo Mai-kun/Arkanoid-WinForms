@@ -1,7 +1,7 @@
-﻿using Arkanoid.GameMaster.Properties;
+﻿using Arkanoid.Contracts.Models;
 using Arkanoid.Models;
 
-namespace Arkanoid
+namespace Arkanoid.GameMaster
 {
     /// <summary>
     /// Отвечает за отрисовку игровых объектов на форме.
@@ -11,52 +11,41 @@ namespace Arkanoid
         /// <summary>
         /// Количество блоков в строке.
         /// </summary>
-        public int BricksInRow { get; }
+        public int BricksInRow { get; } = 8;
 
-        /// <summary>
-        /// Экземпляр объекта <see cref="Models.Brick"/>
-        /// </summary>
-        public Brick Brick { get; set; }
-
-        /// <summary>
-        /// Экземпляр объекта <see cref="Models.Ball"/>.
-        /// </summary>
-        public Ball Ball { get; set; }
-
-        /// <summary>
-        /// Экземпляр объекта <see cref="Models.Ball"/>.
-        /// </summary>
-        public Platform Platform { get; set; }
-
-        private const int Rows = 5;
-        private int defaultHeartCount;
+        private readonly brick brick;
+        private readonly Platform platform;
+        private readonly Ball ball;
+        private readonly Heart heart;
         private readonly Control heartsControl;
         private readonly Control mainControl;
 
-        public GameDrawer(Control mainControl, Control heartsControl)
+        private const int Rows = 5;
+        private int defaultHeartCount;
+
+        public GameDrawer(Control mainControl, Control heartsControl, brick brick, Platform platform, Ball ball, Heart heart)
         {
-            Bitmap[] bricksBitmap = { Resources.BlueBrick, Resources.PurpleBrick, Resources.GreenBrick, Resources.RedBrick, Resources.OrangeBrick };
-            Brick = new(80, 30, bricksBitmap);
-            BricksInRow = 8;
+            this.brick = brick;
+            this.platform = platform;
+            this.ball = ball;
+            this.heart = heart;
 
             this.mainControl = mainControl;
             this.heartsControl = heartsControl;
-
-            InitBallInstance();
         }
 
         /// <summary>
-        /// Объект <see cref="PictureBox"/> для <see cref="Models.Ball"/>
+        /// Объект <see cref="PictureBox"/> для <see cref="Ball"/>
         /// </summary>
         public PictureBox BallPictureBox { get; set; }
 
         /// <summary>
-        /// Объект <see cref="PictureBox"/> для <see cref="Models.Platform"/>
+        /// Объект <see cref="PictureBox"/> для <see cref="Platform"/>
         /// </summary>
         public PictureBox PlatformPictureBox { get; set; }
 
         /// <summary>
-        /// Список объектов <see cref="PictureBox"/> по <see cref="Models.Brick"/>.
+        /// Список объектов <see cref="PictureBox"/> по <see cref="Models.brick"/>.
         /// </summary>
         public List<PictureBox> Bricks { get; set; }
 
@@ -72,12 +61,12 @@ namespace Arkanoid
                 {
                     var block = new PictureBox
                     {
-                        Width = Brick.Width,
-                        Height = Brick.Height,
-                        Image = Brick.Images[row % Brick.Images.Length],
+                        Width = brick.Width,
+                        Height = brick.Height,
+                        Image = brick.Images[row % brick.Images.Length],
                         SizeMode = PictureBoxSizeMode.StretchImage,
-                        Left = col * Brick.Width,
-                        Top = row * Brick.Height,
+                        Left = col * brick.Width,
+                        Top = row * brick.Height,
                     };
 
                     Bricks.Add(block);
@@ -87,45 +76,34 @@ namespace Arkanoid
         }
 
         /// <summary>
-        /// Добавляет <see cref="Models.Ball"/> на панель игры.
+        /// Добавляет <see cref="Ball"/> на панель игры.
         /// </summary>
         public void InitializePictureBoxBall()
         {
-            InitBallInstance();
-
             BallPictureBox = new PictureBox()
             {
-                Height = Ball.Size,
-                Width = Ball.Size,
-                Image = Resources.Ball,
+                Height = ball.Size,
+                Width = ball.Size,
+                Image = ball.Image,
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Location = Ball.Location,
+                Location = ball.Location,
             };
 
             mainControl.Controls.Add(BallPictureBox);
         }
 
-        private void InitBallInstance()
-        {
-            var ballPoint = new Point(mainControl.Width / 2, mainControl.Height / 2);
-            Ball = new(25, -2, -2, ballPoint, Resources.Ball);
-        }
-
         /// <summary>
-        /// Добавляет <see cref="Models.Platform"/> на панель игры.
+        /// Добавляет <see cref="Platform"/> на панель игры.
         /// </summary>
         public void InitializePictureBoxPlatform()
         {
-            var platformPoint = new Point(mainControl.Width / 2, mainControl.Height - 100);
-            Platform = new(150, 35, 8, platformPoint, Resources.Platform);
-
             PlatformPictureBox = new PictureBox()
             {
-                Width = Platform.Width,
-                Height = Platform.Height,
-                Image = Platform.Image,
+                Width = platform.Width,
+                Height = platform.Height,
+                Image = platform.Image,
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Location = Platform.Location,
+                Location = platform.Location,
             };
 
             mainControl.Controls.Add(PlatformPictureBox);
@@ -137,21 +115,17 @@ namespace Arkanoid
         public void InitializePictureBoxHearts(int defaultHeartCount)
         {
             this.defaultHeartCount = defaultHeartCount;
-            var groupBoxWidth = heartsControl.Width;
-
-            var heartWidth = groupBoxWidth / defaultHeartCount;
-
             for (var i = 0; i < defaultHeartCount; i++)
             {
-                var heart = new PictureBox
+                var heartPictureBox = new PictureBox
                 {
-                    Image = Resources.Heart,
+                    Image = heart.Image,
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Width = heartWidth,
-                    Location = new Point(i * heartWidth, 0)
+                    Width = heart.Width,
+                    Location = new Point(i * heart.Width, 0)
                 };
 
-                heartsControl.Controls.Add(heart);
+                heartsControl.Controls.Add(heartPictureBox);
             }
         }
 

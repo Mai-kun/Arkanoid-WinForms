@@ -1,3 +1,7 @@
+using Arkanoid.Contracts.Models;
+using Arkanoid.GameMaster;
+using Arkanoid.Models;
+using Arkanoid.Properties;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Arkanoid
@@ -10,14 +14,19 @@ namespace Arkanoid
         private const int DefaultHeartCount = 3;
         private int currentHeartCount = DefaultHeartCount;
         private Timer timer1;
+        private brick brick;
+        private Platform platform;
+        private Ball ball;
+        private Heart heart;
 
         public GameForm()
         {
             InitializeComponent();
 
-            gameDrawer = new(gamePanel, heartsPanel);
+            InitializeGameObjects();
+            gameDrawer = new(gamePanel, heartsPanel, brick, platform, ball, heart);
 
-            gamePanel.Width = gameDrawer.Brick.Width * gameDrawer.BricksInRow;
+            gamePanel.Width = brick.Width * gameDrawer.BricksInRow;
             Width = gamePanel.Width + 250;
 
             gameDrawer.InitializePictureBoxBricks();
@@ -26,8 +35,21 @@ namespace Arkanoid
             gameDrawer.InitializePictureBoxHearts(DefaultHeartCount);
 
             InitializeTimer();
-
             gameManager = new(timer1, scoreLabel);
+        }
+
+        private void InitializeGameObjects()
+        {
+            Bitmap[] bricksBitmap = { Resources.BlueBrick, Resources.PurpleBrick, Resources.GreenBrick, Resources.RedBrick, Resources.OrangeBrick };
+            brick = new(80, 30, bricksBitmap);
+
+            var platformPoint = new Point(Width / 2, Height - 100);
+            platform = new(150, 35, 8, platformPoint, Resources.Platform);
+
+            heart = new(Resources.Heart, heartsPanel.Width / DefaultHeartCount, 0);
+
+            var ballPoint = new Point(Width / 2, Height / 2);
+            ball = new(25, 2, 2, ballPoint, Resources.Ball);
         }
 
         private void InitializeTimer()
@@ -42,8 +64,8 @@ namespace Arkanoid
 
         private void Timer1_Tick(object? sender, EventArgs e)
         {
-            var ballSpeedX = gameDrawer.Ball.SpeedX;
-            var ballSpeedY = gameDrawer.Ball.SpeedY;
+            var ballSpeedX = ball.SpeedX;
+            var ballSpeedY = ball.SpeedY;
 
             var newLocationX = gameDrawer.BallPictureBox.Location.X + ballSpeedX;
             var newLocationY = gameDrawer.BallPictureBox.Location.Y + ballSpeedY;
@@ -76,17 +98,17 @@ namespace Arkanoid
         {
             if (gameDrawer.BallPictureBox.Left < 0 || gameDrawer.BallPictureBox.Right > gamePanel.Width)
             {
-                gameDrawer.Ball.ChangeVelocityX();
+                ball.ChangeVelocityX();
             }
 
             if (gameDrawer.BallPictureBox.Top < 0)
             {
-                gameDrawer.Ball.ChangeVelocityY();
+                ball.ChangeVelocityY();
             }
 
             if (gameDrawer.BallPictureBox.Bounds.IntersectsWith(gameDrawer.PlatformPictureBox.Bounds))
             {
-                gameDrawer.Ball.ChangeVelocityY();
+                ball.ChangeVelocityY();
             }
         }
 
@@ -101,7 +123,7 @@ namespace Arkanoid
 
                     gameManager.UpdateScore();
 
-                    gameDrawer.Ball.ChangeVelocityY();
+                    ball.ChangeVelocityY();
                     break;
                 }
             }
@@ -114,11 +136,11 @@ namespace Arkanoid
             switch (e.KeyCode)
             {
                 case Keys.A:
-                    platformLocationX -= gameDrawer.Platform.Speed;
+                    platformLocationX -= platform.Speed;
                     break;
 
                 case Keys.D:
-                    platformLocationX += gameDrawer.Platform.Speed;
+                    platformLocationX += platform.Speed;
                     break;
 
                 case Keys.Escape:
